@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mule xmlns:file="http://www.mulesoft.org/schema/mule/file"
+      xmlns:dw="http://www.mulesoft.org/schema/mule/ee/dw"
+      xmlns:quartz="http://www.mulesoft.org/schema/mule/quartz"
+      xmlns:vm="http://www.mulesoft.org/schema/mule/vm"
+      xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+      xmlns:tracking="http://www.mulesoft.org/schema/mule/ee/tracking"
+      xmlns="http://www.mulesoft.org/schema/mule/core"
+      xmlns:tls="http://www.mulesoft.org/schema/mule/tls"
+      xmlns:http="http://www.mulesoft.org/schema/mule/http"
+      xmlns:json="http://www.mulesoft.org/schema/mule/json"
+      xmlns:jms="http://www.mulesoft.org/schema/mule/jms"
+      xmlns:objectstore="http://www.mulesoft.org/schema/mule/objectstore"
+      xmlns:mulerequester="http://www.mulesoft.org/schema/mule/mulerequester"
+      xmlns:spring="http://www.springframework.org/schema/beans"
+      xmlns:context="http://www.springframework.org/schema/context"
+      xmlns:scripting="http://www.mulesoft.org/schema/mule/scripting"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/tls http://www.mulesoft.org/schema/mule/tls/current/mule-tls.xsd
+http://www.mulesoft.org/schema/mule/mulerequester http://www.mulesoft.org/schema/mule/mulerequester/current/mule-mulerequester.xsd
+http://www.mulesoft.org/schema/mule/json http://www.mulesoft.org/schema/mule/json/current/mule-json.xsd
+http://www.mulesoft.org/schema/mule/jms http://www.mulesoft.org/schema/mule/jms/current/mule-jms.xsd
+http://www.mulesoft.org/schema/mule/objectstore http://www.mulesoft.org/schema/mule/objectstore/current/mule-objectstore.xsd
+http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.1.xsd
+http://www.mulesoft.org/schema/mule/ee/tracking http://www.mulesoft.org/schema/mule/ee/tracking/current/mule-tracking-ee.xsd
+http://www.mulesoft.org/schema/mule/vm http://www.mulesoft.org/schema/mule/vm/current/mule-vm.xsd
+http://www.mulesoft.org/schema/mule/ee/dw http://www.mulesoft.org/schema/mule/ee/dw/current/dw.xsd
+http://www.mulesoft.org/schema/mule/file http://www.mulesoft.org/schema/mule/file/current/mule-file.xsd
+http://www.mulesoft.org/schema/mule/quartz http://www.mulesoft.org/schema/mule/quartz/current/mule-quartz.xsd
+http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-current.xsd
+http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.0.xsd
+http://www.mulesoft.org/schema/mule/scripting http://www.mulesoft.org/schema/mule/scripting/current/mule-scripting.xsd"
+      version="EE-3.7.0">
+
+    <spring:beans>
+        <context:annotation-config />
+        <context:property-placeholder location="classpath:${FlexEnv}/${FlexEnv}.properties"/>
+        <spring:import resource="classpath:${FlexEnv}/manheim-api.xml"/>
+    </spring:beans>
+
+    <http:listener-config name="httpConfig" host="0.0.0.0" port="${https.port}" protocol="HTTP"
+                          doc:name="HTTP Listener Configuration">
+    </http:listener-config>
+
+    <!--
+    <vm:connector name="sfVMConnector" validateConnections="true" numberOfConcurrentTransactedReceivers="${sfMaxActiveConnectionsVM}">
+        <vm:queue-profile maxOutstandingMessages="500">
+            <default-persistent-queue-store/>
+        </vm:queue-profile>
+    </vm:connector>
+    -->
+
+    <flow name="testGetEvents">
+        <http:listener config-ref="httpConfig" path="/testGetEvents" doc:name="HTTP"
+                       allowedMethods="GET"/>
+        <flow-ref name="getAccessTokenMap" doc:name="getAccessToken"/>
+        <set-payload doc:name="Set Payload" value="#[payload['accessToken']]"/>
+        <logger level="INFO" doc:name="Logger" message="Got AccessToken message #[message] with payload #[payload]" category="testGetEvents"/>
+        <flow-ref name="getInventoryUnitsFlow"/>
+        <logger level="INFO" category="purchaseEventListenerFlow" message="Getting inventory with #[payload]"/>
+    </flow>
+    <flow name="testGetUnit">
+        <http:listener config-ref="httpConfig" path="/testGetUnit" doc:name="HTTP"
+                       allowedMethods="GET"/>
+        <flow-ref name="getInventoryUnitsFlow2"/>
+        <logger level="INFO" category="purchaseEventListenerFlow" message="Getting inventory with #[payload]"/>
+    </flow>
+
+    <flow name="purchaseEventListenerFlow">
+        <http:listener config-ref="httpConfig" doc:name="User data" path="purchaseEvent" allowedMethods="POST"/>
+        <json:json-to-object-transformer returnClass="java.util.TreeMap" doc:name="JSON to Object"/>
+         <logger level="INFO" category="purchaseEventFlow" message="Message received with #[payload]"/>
+        <flow-ref name="getInventoryUnitsFlow"/>
+        <logger level="INFO" category="purchaseEventListenerFlow" message="Getting inventory with #[payload]"/>
+    </flow>
+    <!-- cronExpression="0 0/5 * * * ?" -->
+    <flow name="dailyManheimEventFlow">
+        <quartz:inbound-endpoint jobName="eventTimer" doc:name="Quartz"
+                                 cronExpression="${pollManheimEvents}">
+            <quartz:event-generator-job>
+                <quartz:payload>tick-tock</quartz:payload>
+            </quartz:event-generator-job>
+        </quartz:inbound-endpoint>
+        <logger message="running batch on schedule" level="INFO" category="purchaseEventListenerFlow" doc:name="Logger"/>
+        <logger category="purchaseEventListenerFlow" level="INFO" message="Batch Run completed" doc:name="Logger"/>
+    </flow>
+
+    <flow name="convertVehicleDataToCSVFlow">
+        <dw:transform-message doc:name="Transform Vehicle data to CSV">
+            <dw:set-payload><![CDATA[%dw 1.0
+ %input payload application/java
+ %output application/java
+ %var contactId = payload.id
+ %var repId = payload.auctionAccessId
+ %var basketProtectionVehicleDuration = payload.basketProtectionVehicleDuration
+ %var contactRecordTypeId = flowVars['contactRecordTypeId']
+---
+[{"Contact_Id__c": "$contactId",
+	"FirstName":payload.firstName,
+	"LastName":payload.lastName,
+	"Phone":payload.phone,
+	"MobilePhone":payload.mobilePhone,
+	"Fax":payload.fax,
+	"Email":payload.email,
+	"Title":payload.jobTitle,
+	"Purchase_Notification_By_Email__c":payload.puchaseNotification,
+	"Contact_Type__c":payload.contactType,
+	"Auction_Access_Rep_Id__c":"$repId",
+	"Alias__c":payload.alias,
+	"User_Name__c":payload.userName,
+	"Basket_Protection_Duration_For_Packs__c":"$basketProtectionVehicleDuration",
+	"Maximum_Basket_Protection_Packs__c":payload.maxBasketProtectionPacks,
+	"MailingStreet":payload.mailingAddress,
+	"MailingCity":payload.mailingCity,
+	"MailingState":payload.mailingState,
+	"MailingPostalCode":payload.mailingZip,
+	"MailingCountry":payload.mailingCountry,
+	"Address_Type__c":payload.addressType,
+	"Preferred_Language__c":payload.preferredLanguage,
+	"Failed_Login_Attempts__c":payload.failedLoginAttempts,
+	"Secret_Question_1__c":payload.secretQuestion1,
+	"Secret_Question_2__c":payload.secretQuestion2,
+	"Answer_1__c":payload.answer1,
+	"Answer_2__c":payload.answer2,
+	"RecordTypeId":"$contactRecordTypeId"}]]]></dw:set-payload>
+        </dw:transform-message>
+    </flow>
+
+    <choice-exception-strategy name="choiceExceptionForSF">
+        <!--
+        <rollback-exception-strategy
+                when="#[exception.causeMatches('org.mule.modules.salesforce.exception.*')]"
+                maxRedeliveryAttempts="2" doc:name="Rollback Exception Strategy">
+            <logger message="Could Not connect to salesforce because of Invalid sessionId" level="INFO" doc:name="Logger"/>
+            <on-redelivery-attempts-exceeded>
+            <logger category="choiceExceptionForSF" message="Message in Exception #[exception]" level="INFO"
+                    doc:name="Logger"/>
+        </on-redelivery-attempts-exceeded>
+        </rollback-exception-strategy>
+        -->
+        <catch-exception-strategy doc:name="Catch Exception Strategy">
+            <logger category="choiceExceptionForSF" message="Message in Exception #[exception]" level="INFO"
+                    doc:name="Logger"/>
+            <set-variable variableName="exceptionMessage" value="#[exception]" doc:name="Variable"/>
+            <set-variable variableName="exceptionCode" value="UNKWONN" doc:name="Variable"/>
+        </catch-exception-strategy>
+    </choice-exception-strategy>
+</mule>

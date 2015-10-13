@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:metadata="http://www.mulesoft.org/schema/mule/metadata" xmlns:mock="http://www.mulesoft.org/schema/mule/mock" xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:munit="http://www.mulesoft.org/schema/mule/munit" xmlns:spring="http://www.springframework.org/schema/beans" xmlns:core="http://www.mulesoft.org/schema/mule/core" version="EE-3.7.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/munit http://www.mulesoft.org/schema/mule/munit/current/mule-munit.xsd
+http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-current.xsd
+http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/mock http://www.mulesoft.org/schema/mule/mock/current/mule-mock.xsd">
+    <munit:config name="munit" doc:name="MUnit configuration"/>
+    <spring:beans>
+        <spring:import resource="classpath:flex.xml"/>
+    </spring:beans>
+    <munit:test name="flex-test-suite-flexMainheimListenerFlowTest" description="Test">
+        <mock:when messageProcessor=".*:.*" doc:name="Mock">
+            <mock:with-attributes>
+                <mock:with-attribute name="doc:name" whereValue="#['GetEventDetails']"/>
+            </mock:with-attributes>
+            <mock:then-return payload="#[{&quot;href&quot;:&quot;https://api.manheim.com/units/id/429a5d00-353c-11e4-9c68-129ac19079d6&quot;}]"/>
+        </mock:when>
+        
+        <munit:set payload="#[{&quot;href&quot;:&quot;https://api.manheim.com/offerings/id/567851d7-713c-4165-4b45-56b42a74d999&quot;,&quot;purchasePrice&quot;:11200,&quot;purchaseDate&quot;:&quot;2014-08-T10:22:00.000+0000&quot;,&quot;status&quot;:&quot;SOLD&quot;,&quot;unit&quot;:{&quot;href&quot;:&quot;https://api.manheim.com/units/id/134251d7-713c-4165-9d69-56b42a74d838&quot;,   &quot;vin&quot;:&quot;5FNYF28778D4115AA&quot;}}]" doc:name="Set Message"/>
+        <logger message="Hello Logger in Munit : #[payload]" level="INFO" doc:name="Logger"/>
+        <!-- manheimPurchaseListenerFlow -->
+        <!--flow-ref name="flexMainheimListenerFlow" doc:name="Flow-ref to flexMainheimListenerFlow"/-->
+        <logger message="payload after #[payload] " level="INFO" doc:name="Logger"/>
+        <munit:assert-true condition="#[payload.href.toString().contains('567851d7-713c-4165-4b45-56b42a74d999')]"/>
+        <!--munit:assert-on-equals expectedValue="https://api.manheim.com/units/id/429a5d00-353c-11e4-9c68-129ac19079d6" actualValue="#[payload.href]" metadata:id="22c2d4de-04cd-49d4-8beb-4c89a643aafb" doc:name="Assert Equals"/-->
+    </munit:test>
+</mule>

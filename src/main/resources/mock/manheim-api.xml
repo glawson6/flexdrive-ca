@@ -1,0 +1,208 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mule xmlns:file="http://www.mulesoft.org/schema/mule/file"
+      xmlns:dw="http://www.mulesoft.org/schema/mule/ee/dw"
+      xmlns:vm="http://www.mulesoft.org/schema/mule/vm"
+      xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+      xmlns:tracking="http://www.mulesoft.org/schema/mule/ee/tracking"
+      xmlns="http://www.mulesoft.org/schema/mule/core"
+      xmlns:tls="http://www.mulesoft.org/schema/mule/tls"
+      xmlns:http="http://www.mulesoft.org/schema/mule/http"
+      xmlns:json="http://www.mulesoft.org/schema/mule/json"
+      xmlns:jms="http://www.mulesoft.org/schema/mule/jms"
+      xmlns:objectstore="http://www.mulesoft.org/schema/mule/objectstore"
+      xmlns:mulerequester="http://www.mulesoft.org/schema/mule/mulerequester"
+      xmlns:spring="http://www.springframework.org/schema/beans"
+      xmlns:context="http://www.springframework.org/schema/context"
+      xmlns:scripting="http://www.mulesoft.org/schema/mule/scripting"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/tls http://www.mulesoft.org/schema/mule/tls/current/mule-tls.xsd
+http://www.mulesoft.org/schema/mule/mulerequester http://www.mulesoft.org/schema/mule/mulerequester/current/mule-mulerequester.xsd
+http://www.mulesoft.org/schema/mule/json http://www.mulesoft.org/schema/mule/json/current/mule-json.xsd
+http://www.mulesoft.org/schema/mule/jms http://www.mulesoft.org/schema/mule/jms/current/mule-jms.xsd
+http://www.mulesoft.org/schema/mule/objectstore http://www.mulesoft.org/schema/mule/objectstore/current/mule-objectstore.xsd
+http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.1.xsd
+http://www.mulesoft.org/schema/mule/ee/tracking http://www.mulesoft.org/schema/mule/ee/tracking/current/mule-tracking-ee.xsd
+http://www.mulesoft.org/schema/mule/vm http://www.mulesoft.org/schema/mule/vm/current/mule-vm.xsd
+http://www.mulesoft.org/schema/mule/ee/dw http://www.mulesoft.org/schema/mule/ee/dw/current/dw.xsd
+http://www.mulesoft.org/schema/mule/file http://www.mulesoft.org/schema/mule/file/current/mule-file.xsd
+http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-current.xsd
+http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.0.xsd
+http://www.mulesoft.org/schema/mule/scripting http://www.mulesoft.org/schema/mule/scripting/current/mule-scripting.xsd"
+      version="EE-3.7.0">
+
+    <spring:beans>
+        <context:annotation-config />
+      <spring:bean id="sampleJSON" class="java.lang.String">
+        <spring:constructor-arg>
+          <spring:bean class="org.springframework.util.FileCopyUtils" factory-method="copyToByteArray">
+            <spring:constructor-arg value="classpath:mock/sampleUnitInfo.json" type="java.io.InputStream" />
+          </spring:bean>
+        </spring:constructor-arg>
+      </spring:bean>
+        <spring:bean id="inventoryUnits" class="java.util.ArrayList">
+            <spring:constructor-arg index="0"><spring:list><spring:value><![CDATA[
+             {
+  "href": "https://api.manheim.com/units/id/429a5d00-353c-11e4-9c68-129ac19079d6",
+  "type": "PASSENGER_VEHICLE",
+  "subType": "SEDAN",
+  "vin": "1G1AP14P577112297",
+  "contact": {
+    "contactName": "Bob Smith",
+    "companyName": "Cars Some More",
+    "phone": "678-101-0999",
+    "email": "john.smith@carssomemore.com",
+    "customerId": 404040,
+    "manheimAccountNumber": 49000111
+  },
+  "customerReferenceId": "1A2B3C",
+  "description": {
+    "modelYear": 2014,
+    "make": "Ford",
+    "model": "Mustang",
+    "trim": "GT Convertible 2-Door",
+    "interiorColor": {
+      "code": "RED",
+      "description": "Red"
+    },
+    "exteriorColor": {
+      "code": "WHITE",
+      "description": "White"
+    },
+    "transmission": "AUTOMATIC",
+    "interiorType": "VINYL",
+    "roofType": "HARDTOP",
+    "driveType": "4_WHEEL_DRIVE",
+    "doorCount": 4,
+    "options": [
+      "ANTILOCK_BRAKES",
+      "AIRBAG_SIDE_CURTAIN",
+      "AIR_CONDITIONING",
+      "AIRBAGS",
+      "ALLOY_WHEELS",
+      "CHILD_SEAT",
+      "CHILD_SEAT_ANCHORS",
+      "CRUISE_CONTROL",
+      "DUAL_CLIMATE_CONTROL",
+      "DVD",
+      "NAVIGATION",
+      "HEATED_SEATS",
+      "POWER_BRAKES",
+      "POWER_DOOR_LOCKS",
+      "POWER_MIRRORS",
+      "POWER_SEATS",
+      "POWER_STEERING",
+      "POWER_WINDOWS",
+      "REAR_WINDOW_DEFROSTER",
+      "TILT_TELESCOPE_WHEEL",
+      "TINTED_GLASS"
+    ],
+    "audio": [
+      "AM",
+      "FM",
+      "CD",
+      "CASSETTE",
+      "SATELLITE",
+      "PREMIUM"
+    ],
+    "engine": {
+      "type": "v6",
+      "horsepower": 305,
+      "displacement": 3.7,
+      "fuel": "GASOLINE"
+    }
+  },
+  "physicalLocation": {
+    "type": "AT_DEALERSHIP",
+    "name": "Billy's Dealership",
+    "operatingLocation": {
+      "href": "https://api.manheim.com/locations/id/QLM1"
+    },
+    "address": "1000 Peachsome street",
+    "city": "Atlanta",
+    "state": "GA",
+    "zip": "30303"
+  },
+  "odometer": {
+    "reading": 30000,
+    "units": "MILES",
+    "digits": 6,
+    "type": "digital"
+  },
+  "title": {
+    "number": "12345",
+    "state": "GA",
+    "location": "AT_AUCTION",
+    "problem": false,
+    "notRequired": false,
+    "branding": "TITLE_PRESENT",
+    "receivedDate": "2014-09-05T20:36:05.968Z",
+    "operatingLocation": {
+      "href": "https://api.manheim.com/locations/id/QLM1"
+    }
+  },
+  "images": [
+    {
+      "type": "FRONT_LEFT",
+      "href": "http://images.manheim.com/foo.jpg"
+    }
+  ],
+  "conditionReports": [
+    {
+      "source": "DataScan",
+      "href": "http://www.manheim.com"
+    }
+  ],
+  "condition": {
+    "frameDamage": false,
+    "priorPaint": [
+      {
+        "description": "FRONT_BUMPER",
+        "condition": "ACCEPTABLE"
+      },
+      {
+        "description": "RIGHT_QUARTER_PANEL",
+        "condition": "SUBSTANDARD"
+      }
+    ]
+  },
+  "subscriptions": {
+    "items": [
+      {
+        "subscriber": {
+          "href": "https://api.manheim.com/subscribers/id/2d2d4180-5576-11e4-8e02-791a2d309def"
+        }
+      }
+    ]
+  },
+  "createdOn": "2014-09-05T20:36:05.968Z",
+  "updatedOn": "2014-09-05T20:36:05.968Z",
+  "consignments": {
+    "href": "https://api.manheim.com/consignments/unit/429a5d00-353c-11e4-9c68-129ac19079d6"
+  }
+}
+             ]]></spring:value></spring:list></spring:constructor-arg>
+        </spring:bean>
+    </spring:beans>
+
+    <!-- We are expecting a payload with the inventory ID -->
+    <flow name="getInventoryUnitsFlow">
+        <set-variable variableName="inventoryUnits" value="#[app.registry.'inventoryUnits']"/>
+        <set-payload value="#[inventoryUnits[0]]"/>
+    </flow>
+
+  <flow name="getInventoryUnitsFlow2">
+    <set-variable variableName="inventoryUnits" value="#[app.registry.'sampleJSON']"/>
+    <set-payload value="#[inventoryUnits]"/>
+    <json:object-to-json-transformer doc:name="Object to JSON"/>
+    <json:json-to-object-transformer returnClass="java.util.TreeMap" doc:name="JSON to Object"/>
+    <set-variable variableName="vin" value="#[payload.vin]"/>
+    <logger level="INFO" category="getInventoryUnitsFlow2" message="transmission is #[flowVars.vin]"/>
+    <logger level="INFO" category="getInventoryUnitsFlow2" message="Getting inventory with #[payload]"/>
+  </flow>
+
+  <flow name="getAccessTokenMap">
+    <logger level="INFO" category="getAccessTokenMap" message="Getting inventory with #[payload]"/>
+  </flow>
+</mule>

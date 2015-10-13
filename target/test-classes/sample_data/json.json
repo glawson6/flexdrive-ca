@@ -1,0 +1,10 @@
+{
+  "href": "????",
+  "purchasePrice": 1,
+  "purchaseDate": "????",
+  "status": "purch",
+  "unit": {
+    "href": "https://api.manheim.com/units/id/134251d7-713c-4165-9d69-56b42a74d838",
+    "vin": "????"
+  }
+}

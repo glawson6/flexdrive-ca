@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:munit="http://www.mulesoft.org/schema/mule/munit" xmlns:spring="http://www.springframework.org/schema/beans" xmlns:core="http://www.mulesoft.org/schema/mule/core" version="EE-3.7.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/munit http://www.mulesoft.org/schema/mule/munit/current/mule-munit.xsd
+http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-current.xsd
+http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd">
+    <munit:config name="munit" doc:name="MUnit configuration"/>
+    <spring:beans>
+        <spring:import resource="classpath:driverOnboarding.xml"/>
+    </spring:beans>
+    <munit:test name="driverOnboarding-test-suite-rentCentricOnboardingFlowTest" description="Test">
+        <flow-ref name="rentCentricOnboardingFlow" doc:name="Flow-ref to rentCentricOnboardingFlow"/>
+    </munit:test>
+    <munit:test name="driverOnboarding-test-suite-stripeOnboardingFlowTest" description="Test">
+        <flow-ref name="stripeOnboardingFlow" doc:name="Flow-ref to stripeOnboardingFlow"/>
+    </munit:test>
+    <munit:test name="driverOnboarding-test-suite-checkUberDriverStatusFlowTest" description="Test">
+        <flow-ref name="checkUberDriverStatusFlow" doc:name="Flow-ref to checkUberDriverStatusFlow"/>
+    </munit:test>
+</mule>

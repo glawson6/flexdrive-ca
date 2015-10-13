@@ -1,0 +1,7 @@
+SUCCESS - Test driverOnboarding-test-suite-rentCentricOnboardingFlowTest finished Successfully.
+SUCCESS - Test driverOnboarding-test-suite-stripeOnboardingFlowTest finished Successfully.
+SUCCESS - Test driverOnboarding-test-suite-checkUberDriverStatusFlowTest finished Successfully.
+
+===================================================================================
+Number of tests run: 3 - Failed: 0 - Errors: 0 - Skipped: 0 - Time elapsed: 0.061ms
+===================================================================================
