@@ -16,6 +16,18 @@ http://www.mulesoft.org/schema/mule/json http://www.mulesoft.org/schema/mule/jso
 
     <spring:beans>
         <context:annotation-config/>
+        <spring:bean id="sampleAllUnitsJSON" class="java.lang.String">
+            <spring:constructor-arg>
+                <spring:bean class="org.springframework.util.FileCopyUtils" factory-method="copyToByteArray">
+                    <spring:constructor-arg value="classpath:mock/sampleAllUnits.json" type="java.io.InputStream"/>
+                </spring:bean>
+            </spring:constructor-arg>
+        </spring:bean>
+        <!--
+        <spring:bean id="sampleAllUnitsJSONMap" class="org.json.simple.parser.JSONParser"   factory-method="parse" >
+            <spring:constructor-arg ref="sampleAllUnitsJSON" type="java.lang.String"/>
+        </spring:bean>
+        -->
     </spring:beans>
 
     <http:request-config name="httpManheimEventSubscriberTokenRequestConfig" protocol="HTTPS" host="${manheimAPIHost}"
@@ -145,7 +157,7 @@ http://www.mulesoft.org/schema/mule/json http://www.mulesoft.org/schema/mule/jso
 
     <!--  We are expecting the payload to be the accessToken. This will be used in the Authorization bearer header -->
 
-    <flow name="getInventoryUnitsFlow">
+    <flow name="getInventoryUnitsWantedFlow">
         <set-variable variableName="authorization" value="#[payload]" doc:name="Set authorization"/>
         <logger category="getInventoryUnitsFlow" message="Payload sent to Manheim API #[payload]" level="INFO"/>
         <set-variable variableName="queryMap" value="#[{'startTime':'2014-01-31T04:00:00Z', 'endTime':'2016-12-31T04:00:00Z'}]" />
@@ -158,5 +170,26 @@ http://www.mulesoft.org/schema/mule/json http://www.mulesoft.org/schema/mule/jso
         <json:json-to-object-transformer returnClass="java.util.HashMap" doc:name="JSON to HashMap"/>
         <set-payload value="#[payload['items']]"/>
     </flow>
+    <!--  We are expecting the payload to be the accessToken. This will be used in the Authorization bearer header -->
+    <flow name="getAllInventoryUnitsFlow">
+        <set-variable variableName="authorization" value="#[payload]" doc:name="Set authorization"/>
+        <logger category="listSubscriberMap" message="Payload sent to Manheim API #[payload]" level="INFO"/>
+        <http:request config-ref="httpManheimAPIConfig" path="subscribers/id/#[flowVars['deleteId']]" method="DELETE" doc:name="HTTP">
+            <http:request-builder>
+                <http:header headerName="Authorization" value="Bearer #[flowVars['authorization']]"/>
+            </http:request-builder>
+        </http:request>
+        <set-payload value="#[payload['items']]"/>
+    </flow>
 
+    <flow name="getAllInventoryUnitsFlowTest">
+        <set-variable variableName="authorization" value="#[payload]" doc:name="Set authorization"/>
+        <logger category="listSubscriberMap" message="Payload sent to Manheim API #[payload]" level="INFO"/>
+        <http:request config-ref="httpManheimAPIConfig" path="subscribers/id/#[flowVars['deleteId']]" method="DELETE" doc:name="HTTP">
+            <http:request-builder>
+                <http:header headerName="Authorization" value="Bearer #[flowVars['authorization']]"/>
+            </http:request-builder>
+        </http:request>
+        <set-payload value="#[payload['items']]"/>
+    </flow>
 </mule>

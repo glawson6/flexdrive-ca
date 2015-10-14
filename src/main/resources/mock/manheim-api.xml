@@ -33,16 +33,18 @@ http://www.mulesoft.org/schema/mule/scripting http://www.mulesoft.org/schema/mul
       version="EE-3.7.0">
 
     <spring:beans>
-        <context:annotation-config />
-      <spring:bean id="sampleJSON" class="java.lang.String">
-        <spring:constructor-arg>
-          <spring:bean class="org.springframework.util.FileCopyUtils" factory-method="copyToByteArray">
-            <spring:constructor-arg value="classpath:mock/sampleUnitInfo.json" type="java.io.InputStream" />
-          </spring:bean>
-        </spring:constructor-arg>
-      </spring:bean>
+        <context:annotation-config/>
+        <spring:bean id="sampleJSON" class="java.lang.String">
+            <spring:constructor-arg>
+                <spring:bean class="org.springframework.util.FileCopyUtils" factory-method="copyToByteArray">
+                    <spring:constructor-arg value="classpath:mock/sampleUnitInfo.json" type="java.io.InputStream"/>
+                </spring:bean>
+            </spring:constructor-arg>
+        </spring:bean>
         <spring:bean id="inventoryUnits" class="java.util.ArrayList">
-            <spring:constructor-arg index="0"><spring:list><spring:value><![CDATA[
+            <spring:constructor-arg index="0">
+                <spring:list>
+                    <spring:value><![CDATA[
              {
   "href": "https://api.manheim.com/units/id/429a5d00-353c-11e4-9c68-129ac19079d6",
   "type": "PASSENGER_VEHICLE",
@@ -182,8 +184,11 @@ http://www.mulesoft.org/schema/mule/scripting http://www.mulesoft.org/schema/mul
     "href": "https://api.manheim.com/consignments/unit/429a5d00-353c-11e4-9c68-129ac19079d6"
   }
 }
-             ]]></spring:value></spring:list></spring:constructor-arg>
+             ]]></spring:value>
+                </spring:list>
+            </spring:constructor-arg>
         </spring:bean>
+
     </spring:beans>
 
     <!-- We are expecting a payload with the inventory ID -->
@@ -192,17 +197,17 @@ http://www.mulesoft.org/schema/mule/scripting http://www.mulesoft.org/schema/mul
         <set-payload value="#[inventoryUnits[0]]"/>
     </flow>
 
-  <flow name="getInventoryUnitsFlow2">
-    <set-variable variableName="inventoryUnits" value="#[app.registry.'sampleJSON']"/>
-    <set-payload value="#[inventoryUnits]"/>
-    <json:object-to-json-transformer doc:name="Object to JSON"/>
-    <json:json-to-object-transformer returnClass="java.util.TreeMap" doc:name="JSON to Object"/>
-    <set-variable variableName="vin" value="#[payload.vin]"/>
-    <logger level="INFO" category="getInventoryUnitsFlow2" message="transmission is #[flowVars.vin]"/>
-    <logger level="INFO" category="getInventoryUnitsFlow2" message="Getting inventory with #[payload]"/>
-  </flow>
+    <flow name="getInventoryUnitsFlow2">
+        <set-variable variableName="inventoryUnits" value="#[app.registry.'sampleJSON']"/>
+        <set-payload value="#[inventoryUnits]"/>
+        <json:object-to-json-transformer doc:name="Object to JSON"/>
+        <json:json-to-object-transformer returnClass="java.util.TreeMap" doc:name="JSON to Object"/>
+        <set-variable variableName="vin" value="#[payload.vin]"/>
+        <logger level="INFO" category="getInventoryUnitsFlow2" message="transmission is #[flowVars.vin]"/>
+        <logger level="INFO" category="getInventoryUnitsFlow2" message="Getting inventory with #[payload]"/>
+    </flow>
 
-  <flow name="getAccessTokenMap">
-    <logger level="INFO" category="getAccessTokenMap" message="Getting inventory with #[payload]"/>
-  </flow>
+    <flow name="getAccessTokenMap">
+        <logger level="INFO" category="getAccessTokenMap" message="Getting inventory with #[payload]"/>
+    </flow>
 </mule>
