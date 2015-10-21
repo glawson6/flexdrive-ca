@@ -1,0 +1,7 @@
+.idea
+target
+*.iml
+.settings
+.mule
+bin
+catalog
