@@ -37,6 +37,14 @@
                 <extensions>true</extensions>
                 <configuration>
                     <copyToAppsDirectory>true</copyToAppsDirectory>
+                    <!--
+                    <inclusions>
+                        <inclusion>
+                            <groupId>org.mule.modules</groupId>
+                            <artifactId>mule-module-mongo</artifactId>
+                        </inclusion>
+                    </inclusions>
+                    -->
                 </configuration>
             </plugin>
             <plugin>
@@ -249,6 +257,7 @@
             <version>${mule.version}</version>
             <scope>provided</scope>
         </dependency>
+
         <dependency>
             <groupId>com.mulesoft.weave</groupId>
             <artifactId>mule-plugin-weave_2.11</artifactId>
@@ -259,6 +268,7 @@
             <artifactId>core_2.11</artifactId>
             <version>1.0.0</version>
         </dependency>
+
         <dependency>
             <groupId>org.scala-lang</groupId>
             <artifactId>scala-library</artifactId>
@@ -291,6 +301,31 @@
             <groupId>net.sf.opencsv</groupId>
             <artifactId>opencsv</artifactId>
             <version>2.3</version>
+        </dependency>
+
+        <!--
+        <dependency>
+            <groupId>org.mule.modules</groupId>
+            <artifactId>mule-module-mongo</artifactId>
+            <version>3.6.1</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.mongodb</groupId>
+                    <artifactId>mongo-java-driver</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        -->
+
+        <dependency>
+            <groupId>org.mongodb</groupId>
+            <artifactId>mongodb-driver</artifactId>
+            <version>3.0.4</version>
+        </dependency>
+        <dependency>
+            <groupId>org.mongodb</groupId>
+            <artifactId>mongo-java-driver</artifactId>
+            <version>3.0.4</version>
         </dependency>
     </dependencies>
 

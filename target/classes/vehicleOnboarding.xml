@@ -50,13 +50,49 @@ http://www.mulesoft.org/schema/mule/scripting http://www.mulesoft.org/schema/mul
             <!--spring:constructor-arg ref="sampleAllUnitsJSON" type="java.lang.String"/-->
             <spring:constructor-arg ref="sampleAllUnitsJSON" type="java.lang.String"/>
         </spring:bean>
-        <spring:bean id="unitInfoToWriterTransformer" class="com.ca.flex.UnitInfoToWriterTransformer"/>
+        <spring:bean id="unitInfoToWriterTransformer" class="com.ca.flex.transformer.UnitInfoToWriterTransformer"/>
+        <spring:bean id="mongoServerAddress" class="com.mongodb.ServerAddress">
+            <spring:constructor-arg type="java.lang.String" value="localhost"/>
+            <spring:constructor-arg type="int" value="27017"/>
+        </spring:bean>
+        <spring:bean id="mongoUserName" class="java.lang.String">
+            <spring:constructor-arg value="flexAdmin"/>
+        </spring:bean>
+        <spring:bean id="mongoPassword" class="java.lang.String">
+            <spring:constructor-arg value="flexAdmin"/>
+        </spring:bean>
+        <spring:bean id="mongoDatabaseStr" class="java.lang.String">
+            <spring:constructor-arg value="flexdrive"/>
+        </spring:bean>
+        <spring:bean id="mongoCredential" class="com.mongodb.MongoCredential" factory-method="createCredential">
+            <spring:constructor-arg index="0" ref="mongoUserName"/>
+            <spring:constructor-arg index="1" ref="mongoDatabaseStr"/>
+            <spring:constructor-arg index="2">
+                <spring:bean  factory-bean="mongoPassword" factory-method="toCharArray"/>
+            </spring:constructor-arg>
+        </spring:bean>
+        <spring:bean id="mongoCredentials" class="java.util.ArrayList">
+            <spring:constructor-arg>
+                <spring:list>
+                    <spring:ref bean="mongoCredential"/>
+                </spring:list>
+            </spring:constructor-arg>
+        </spring:bean>
+        <spring:bean id="mongoClient" class="com.mongodb.MongoClient">
+            <spring:constructor-arg index="0" ref="mongoServerAddress"/>
+            <spring:constructor-arg index="1" ref="mongoCredentials"/>
+        </spring:bean>
     </spring:beans>
 
     <http:listener-config name="httpConfig" host="0.0.0.0" port="${https.port}" protocol="HTTP"
                           doc:name="HTTP Listener Configuration">
     </http:listener-config>
-
+    <!--
+    <mongo:config name="mongoDBConfig" doc:name="Mongo DB" database="flexdrive" host="localhost" password="flexAdmin" username="flexAdmin">
+        <mongo:connection-pooling-profile initialisationPolicy="INITIALISE_ONE" exhaustedAction="WHEN_EXHAUSTED_GROW"/>
+        <reconnect-forever/>
+    </mongo:config>
+    -->
     <!--
     <vm:connector name="sfVMConnector" validateConnections="true" numberOfConcurrentTransactedReceivers="${sfMaxActiveConnectionsVM}">
         <vm:queue-profile maxOutstandingMessages="500">
@@ -83,16 +119,25 @@ http://www.mulesoft.org/schema/mule/scripting http://www.mulesoft.org/schema/mul
         <logger level="INFO" category="purchaseEventListenerFlow" message="Getting inventory with #[payload]"/>
     </flow>
     -->
-    <!--
     <flow name="purchaseEventListenerFlow">
         <http:listener config-ref="httpConfig" doc:name="User data" path="purchaseEvent" allowedMethods="POST"/>
         <json:json-to-object-transformer returnClass="java.util.TreeMap" doc:name="JSON to Object"/>
-         <logger level="INFO" category="purchaseEventFlow" message="Message received with #[payload]"/>
-        <flow-ref name="getInventoryUnitsFlow"/>
+        <logger level="INFO" category="purchaseEventFlow" message="Message received with #[payload]"/>
+
+        <!--expression-component doc:name="EC"><![CDATA[payload.inserted = server.dateTime ;]]></expression-component-->
+        <!--
+        <json:object-to-json-transformer doc:name="Object to JSON"/>
+        <logger level="INFO" category="purchaseEventFlow" message="Message transformed as JSON #[payload]"/>
+        -->
+        <!--transformer ref="jsonToDbobjectTransformer"/-->
+        <set-payload value="#[new org.bson.Document(payload)]"/>
+        <component doc:name="Java" class="com.ca.flex.component.PersistPurchaseEventComponent"/>
+        <set-payload value="#[payload.toJson()]"/>
         <logger level="INFO" category="purchaseEventListenerFlow" message="Getting inventory with #[payload]"/>
     </flow>
-    -->
+    <!-- OFFERINGS.PURCHASED -->
     <!-- cronExpression="0 0/5 * * * ?" -->
+    <!--
     <flow name="dailyFlexdrivePurchasesFlow" processingStrategy="synchronous">
         <quartz:inbound-endpoint jobName="eventTimer" doc:name="Quartz"
                                  cronExpression="${pollManheimEvents}">
@@ -100,7 +145,7 @@ http://www.mulesoft.org/schema/mule/scripting http://www.mulesoft.org/schema/mul
                 <quartz:payload>tick-tock</quartz:payload>
             </quartz:event-generator-job>
         </quartz:inbound-endpoint>
-        <logger message="running batch on schedule" level="INFO" category="purchaseEventListenerFlow"
+        <logger message="running batch on schedule on http port ${https.port}" level="INFO" category="purchaseEventListenerFlow"
                 doc:name="Logger"/>
         <enricher target="#[variable:recentlyBoughtUnits]"
                   doc:name="Message Enricher">
@@ -119,10 +164,42 @@ http://www.mulesoft.org/schema/mule/scripting http://www.mulesoft.org/schema/mul
                   doc:name="Message Enricher">
             <flow-ref name="convertVehicleDataToCSVFlow2" doc:name="Flow Reference"/>
         </enricher>
-        <logger category="dailyFlexdrivePurchasesFlow" message="CSV Data #[flowVars['csvData']]" level="INFO"/>
+        <logger category="dailyFlexdrivePurchasesFlow" message="CSV Data" level="INFO"/>
+        <logger category="dailyFlexdrivePurchasesFlow" message="#[flowVars['csvData']]" level="INFO"/>
         <logger category="dailyFlexdrivePurchasesFlow" level="INFO" message="Batch Run completed" doc:name="Logger"/>
     </flow>
-
+    -->
+    <flow name="dailyFlexdrivePurchasesFlow" processingStrategy="synchronous">
+        <quartz:inbound-endpoint jobName="eventTimer" doc:name="Quartz"
+                                 cronExpression="${pollManheimEvents}">
+            <quartz:event-generator-job>
+                <quartz:payload>tick-tock</quartz:payload>
+            </quartz:event-generator-job>
+        </quartz:inbound-endpoint>
+        <logger message="running batch on schedule on http port ${https.port}" level="INFO" category="purchaseEventListenerFlow"
+                doc:name="Logger"/>
+        <component doc:name="Java" class="com.ca.flex.component.GetPurchaseEventsComponent"/>
+        <!--
+        <logger category="dailyFlexdrivePurchasesFlow" message="Vin List #[flowVars['recentlyBoughtUnits']]"
+                level="INFO"/>
+        <logger category="dailyFlexdrivePurchasesFlow" message="Units Filtered #[flowVars['unitsBoughtInfoList']]"
+                level="INFO"/>
+        <enricher target="#[variable:csvData]"
+                  doc:name="Message Enricher">
+            <flow-ref name="convertVehicleDataToCSVFlow2" doc:name="Flow Reference"/>
+        </enricher>
+        <logger category="dailyFlexdrivePurchasesFlow" message="CSV Data" level="INFO"/>
+        <logger category="dailyFlexdrivePurchasesFlow" message="#[flowVars['csvData']]" level="INFO"/>
+        -->
+        <set-variable variableName="documents" value="#[new java.util.ArrayList()]"/>
+        <foreach collection="#[payload]">
+            <expression-component doc:name="Message to encryptor">
+                <![CDATA[flowVars.documents.add(payload);]]></expression-component>
+        </foreach>
+        <logger category="dailyFlexdrivePurchasesFlow" message="Documents #[flowVars['documents']]"
+                level="INFO"/>
+        <logger category="dailyFlexdrivePurchasesFlow" level="INFO" message="Batch Run completed" doc:name="Logger"/>
+    </flow>
     <!-- Should get these from Rentcentric -->
     <flow name="recentlyBoughtUnitsFlow">
         <logger category=""
@@ -141,7 +218,7 @@ http://www.mulesoft.org/schema/mule/scripting http://www.mulesoft.org/schema/mul
     </flow>
 
     <flow name="unitsBoughtInfoListFlow">
-        <logger category="" message="Getting all units from Manheim. We should filter out ones not in vinList."/>
+        <logger category="unitsBoughtInfoListFlow" message="Getting all units from Manheim. We should filter out ones not in vinList."/>
         <!--flow-ref name="getAccessTokenMap"/-->
 
         <set-variable variableName="inventoryUnitsMap" value="#[app.registry.'sampleAllUnitsJSONMap']"/>
@@ -154,7 +231,8 @@ http://www.mulesoft.org/schema/mule/scripting http://www.mulesoft.org/schema/mul
         <logger category="unitsBoughtInfoListFlow" message="items => #[inventoryUnitsMap.items]" level="INFO"/>
         <foreach collection="#[inventoryUnitsMap.items]">
             <!--expression-filter expression="#[flowVars['recentlyBoughtUnits'].contains(payload.vin)]" doc:name="Expression"/-->
-            <expression-component doc:name="Message to encryptor"><![CDATA[flowVars.unitsList.add(payload);]]></expression-component>
+            <expression-component doc:name="Message to encryptor">
+                <![CDATA[flowVars.unitsList.add(payload);]]></expression-component>
         </foreach>
         <set-payload value="#[flowVars['unitsList']]"/>
         <!--logger category="recentlyBoughtUnitsFlow" message="#[payload]" level="INFO"/-->
