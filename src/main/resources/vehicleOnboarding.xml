@@ -52,21 +52,21 @@ http://www.mulesoft.org/schema/mule/scripting http://www.mulesoft.org/schema/mul
         </spring:bean>
         <spring:bean id="unitInfoToWriterTransformer" class="com.ca.flex.transformer.UnitInfoToWriterTransformer"/>
         <spring:bean id="mongoServerAddress" class="com.mongodb.ServerAddress">
-            <spring:constructor-arg type="java.lang.String" value="localhost"/>
-            <spring:constructor-arg type="int" value="27017"/>
+            <spring:constructor-arg type="java.lang.String" value="${mongodbHost}"/>
+            <spring:constructor-arg type="int" value="${mongodbPort}"/> <!--  16528 -->
         </spring:bean>
         <spring:bean id="mongoUserName" class="java.lang.String">
-            <spring:constructor-arg value="flexAdmin"/>
+            <spring:constructor-arg value="${mongoUserNameStr}"/>
         </spring:bean>
         <spring:bean id="mongoPassword" class="java.lang.String">
-            <spring:constructor-arg value="flexAdmin"/>
+            <spring:constructor-arg value="${mongoPasswordStr}"/>
         </spring:bean>
-        <spring:bean id="mongoDatabaseStr" class="java.lang.String">
-            <spring:constructor-arg value="flexdrive"/>
+        <spring:bean id="mongoDatabase" class="java.lang.String">
+            <spring:constructor-arg value="${mongoDatabaseStr}"/>
         </spring:bean>
         <spring:bean id="mongoCredential" class="com.mongodb.MongoCredential" factory-method="createCredential">
             <spring:constructor-arg index="0" ref="mongoUserName"/>
-            <spring:constructor-arg index="1" ref="mongoDatabaseStr"/>
+            <spring:constructor-arg index="1" ref="mongoDatabase"/>
             <spring:constructor-arg index="2">
                 <spring:bean  factory-bean="mongoPassword" factory-method="toCharArray"/>
             </spring:constructor-arg>
@@ -179,18 +179,6 @@ http://www.mulesoft.org/schema/mule/scripting http://www.mulesoft.org/schema/mul
         <logger message="running batch on schedule on http port ${https.port}" level="INFO" category="purchaseEventListenerFlow"
                 doc:name="Logger"/>
         <component doc:name="Java" class="com.ca.flex.component.GetPurchaseEventsComponent"/>
-        <!--
-        <logger category="dailyFlexdrivePurchasesFlow" message="Vin List #[flowVars['recentlyBoughtUnits']]"
-                level="INFO"/>
-        <logger category="dailyFlexdrivePurchasesFlow" message="Units Filtered #[flowVars['unitsBoughtInfoList']]"
-                level="INFO"/>
-        <enricher target="#[variable:csvData]"
-                  doc:name="Message Enricher">
-            <flow-ref name="convertVehicleDataToCSVFlow2" doc:name="Flow Reference"/>
-        </enricher>
-        <logger category="dailyFlexdrivePurchasesFlow" message="CSV Data" level="INFO"/>
-        <logger category="dailyFlexdrivePurchasesFlow" message="#[flowVars['csvData']]" level="INFO"/>
-        -->
         <set-variable variableName="documents" value="#[new java.util.ArrayList()]"/>
         <foreach collection="#[payload]">
             <expression-component doc:name="Message to encryptor">

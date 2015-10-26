@@ -17,3 +17,11 @@ db.updateUser(
    }
 )
 
+
+db.createUser(
+  {
+    user: "glawson6",
+    pwd: "Bigg6dogg!",
+    roles: [ { role: "userAdminAnyDatabase", db: "admin" } ]
+  }
+)
