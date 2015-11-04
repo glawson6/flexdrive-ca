@@ -1,6 +1,0 @@
-GET https://sandbox.api.manheim.com/offerings/id/14 HTTP/1.1
-Accept-Encoding: gzip,deflate
-Host: server:5200
-Connection: Keep-Alive
-User-Agent: Apache-HttpClient/4.1.1 (java 1.5)
-Accept: application/json

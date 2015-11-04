@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+                           http://www.springframework.org/schema/beans/spring-beans.xsd
+                           http://www.springframework.org/schema/context
+                           http://www.springframework.org/schema/context/spring-context.xsd">
+
+
+    <context:property-placeholder location="classpath:${FlexEnv}/${FlexEnv}.properties"/>
+    <bean id="mongoServerAddress" class="com.mongodb.ServerAddress">
+        <constructor-arg type="java.lang.String" value="${mongodbHost}"/>
+        <constructor-arg type="int" value="${mongodbPort}"/> <!--  16528 -->
+    </bean>
+    <bean id="mongoUserName" class="java.lang.String">
+        <constructor-arg value="${mongoUserNameStr}"/>
+    </bean>
+    <bean id="mongoPassword" class="java.lang.String">
+        <constructor-arg value="${mongoPasswordStr}"/>
+    </bean>
+    <bean id="mongoDatabase" class="java.lang.String">
+        <constructor-arg value="${mongoDatabaseStr}"/>
+    </bean>
+    <bean id="mongoCredential" class="com.mongodb.MongoCredential" factory-method="createCredential">
+        <constructor-arg index="0" ref="mongoUserName"/>
+        <constructor-arg index="1" ref="mongoDatabase"/>
+        <constructor-arg index="2">
+            <bean  factory-bean="mongoPassword" factory-method="toCharArray"/>
+        </constructor-arg>
+    </bean>
+    <bean id="mongoCredentials" class="java.util.ArrayList">
+        <constructor-arg>
+            <list>
+                <ref bean="mongoCredential"/>
+            </list>
+        </constructor-arg>
+    </bean>
+    <bean id="mongoClient" class="com.mongodb.MongoClient">
+        <constructor-arg index="0" ref="mongoServerAddress"/>
+        <constructor-arg index="1" ref="mongoCredentials"/>
+    </bean>
+
+</beans>

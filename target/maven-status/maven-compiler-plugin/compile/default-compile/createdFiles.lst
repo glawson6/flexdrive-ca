@@ -1,4 +1,5 @@
+com/ca/flex/component/HttpRequest.class
+com/ca/flex/component/PersistEventComponent.class
 com/ca/flex/component/GetPurchaseEventsComponent.class
 com/ca/flex/transformer/UnitInfoToWriterTransformer.class
-com/ca/flex/component/PersistPurchaseEventComponent.class
 com/ca/flex/IdExtractor.class
