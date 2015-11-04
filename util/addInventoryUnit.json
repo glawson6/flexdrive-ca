@@ -1,0 +1,127 @@
+{
+  "type": "PASSENGER_VEHICLE",
+  "subType": "SEDAN",
+  "vin": "1G1AP14P577112297",
+  "contact": {
+    "contactName": "John Doe",
+    "companyName": "Porsche Finance",
+    "phone": "555-555-5555",
+    "email": "johndoe@porsche.com",
+    "manheimAccountNumber": "5160611"
+  },
+  "customerReferenceId": "1A2B3C",
+  "description": {
+    "modelYear": 2014,
+    "make": "Ford",
+    "model": "Mustang",
+    "trim": "GT Convertible 2-Door",
+    "interiorColor": {
+      "code": "RED",
+      "description": "Red"
+    },
+    "exteriorColor": {
+      "code": "WHITE",
+      "description": "White"
+    },
+    "engine": {
+      "type": "V8",
+      "horsepower": 420,
+      "displacement": 5.2,
+      "fuel": "GASOLINE"
+    },
+    "transmission": "AUTOMATIC",
+    "interiorType": "LEATHER",
+    "roofType": "CONVERTIBLE",
+    "driveType": "2_WHEEL_DRIVE",
+    "audio": [
+      "AM",
+      "FM",
+      "CD",
+      "CASSETTE",
+      "SATELLITE",
+      "PREMIUM"
+    ],
+    "doorCount": 2,
+    "options": [
+      "ANTILOCK_BRAKES",
+      "AIRBAG_SIDE_CURTAIN",
+      "AIR_CONDITIONING",
+      "AIRBAGS",
+      "ALLOY_WHEELS",
+      "CHILD_SEAT",
+      "CHILD_SEAT_ANCHORS",
+      "CRUISE_CONTROL",
+      "DUAL_CLIMATE_CONTROL",
+      "DVD",
+      "NAVIGATION",
+      "HEATED_SEATS",
+      "POWER_BRAKES",
+      "POWER_DOOR_LOCKS",
+      "POWER_MIRRORS",
+      "POWER_SEATS",
+      "POWER_STEERING",
+      "POWER_WINDOWS",
+      "REAR_WINDOW_DEFROSTER",
+      "TILT_TELESCOPE_WHEEL",
+      "TINTED_GLASS"
+    ]
+  },
+  "odometer": {
+    "reading": 376,
+    "units": "MILES",
+    "digits": 8,
+    "type": "DIGITAL"
+  },
+  "physicalLocation": {
+    "type": "AT_AUCTION",
+    "operatingLocation": {
+      "href": "https://api.manheim.com/locations/id/QLM1"
+    }
+  },
+  "conditionReports": [
+    {
+      "source": "DataScan",
+      "href": "http://www.manheim.com"
+    }
+  ],
+  "condition": {
+    "frameDamage": false,
+    "priorPaint": [
+      {
+        "description": "FRONT_BUMPER",
+        "condition": "ACCEPTABLE"
+      },
+      {
+        "description": "RIGHT_QUARTER_PANEL",
+        "condition": "SUBSTANDARD"
+      }
+    ]
+  },
+  "title": {
+    "number": "1235",
+    "state": "GA",
+    "operatingLocation": {
+      "href": "https://api.manheim.com/locations/id/QLM1"
+    },
+    "location": "AT_AUCTION",
+    "problem": false,
+    "notRequired": true,
+    "receivedDate": "2014-09-09",
+    "branding": "TITLE_PRESENT"
+  },
+  "images": [
+    {
+      "type": "FRONT_LEFT",
+      "href": "http://images.manheim.com/foo.jpg"
+    }
+  ],
+  "subscriptions": {
+    "items": [
+      {
+        "subscriber": {
+          "href": "https://sandbox.api.manheim.com/subscribers/id/649d4120-7ddd-11e5-9deb-4f8cdfa22902"
+        }
+      }
+    ]
+  }
+}

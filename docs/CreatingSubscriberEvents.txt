@@ -1,0 +1,306 @@
+
+tap ~/dev/workspaces/manheim/flexdrive-ca/util on master[+!?]
+$ ls -al
+total 104
+drwxr-xr-x 26 tap staff  884 Oct 30 17:00 ./
+drwxr-xr-x 20 tap staff  680 Oct 30 16:04 ../
+-rw-r--r--  1 tap staff 8196 Oct 30 16:03 .DS_Store
+-rw-r--r--  1 tap staff 3410 Oct 30 12:27 Tools.groovy
+-rw-r--r--  1 tap staff 2530 Oct 28 23:43 addInventoryUnit.groovy
+-rw-r--r--  1 tap staff 2722 Oct 28 23:34 addInventoryUnit.json
+-rw-r--r--  1 tap staff   71 Oct 30 11:37 auth.json
+-rw-r--r--  1 tap staff 1665 Oct 30 14:09 createEvent.groovy
+-rw-r--r--  1 tap staff 1971 Oct 30 13:15 createSubscriber.groovy
+-rw-r--r--  1 tap staff  111 Oct 28 21:25 createSubscriber.json
+-rw-r--r--  1 tap staff 2425 Oct 30 13:49 createSubscription.groovy
+-rw-r--r--  1 tap staff  505 Oct 30 13:45 createSubscription.json
+-rw-r--r--  1 tap staff  507 Oct 22 15:42 createUser.sh
+-rw-r--r--  1 tap staff  206 Oct 27 20:38 curl-requests.txt
+-rw-r--r--  1 tap staff  171 Oct 19 08:52 curlRequest.sh
+-rw-r--r--  1 tap staff 1895 Oct 28 22:25 deleteSubscriber.groovy
+-rw-r--r--  1 tap staff 1893 Oct 28 22:25 deleteSubscriptions.groovy
+-rw-r--r--  1 tap staff 2089 Oct 28 23:04 getSubscription.groovy
+-rw-r--r--  1 tap staff 1590 Oct 30 14:17 listEventsByType.groovy
+-rw-r--r--  1 tap staff 1604 Oct 30 14:11 listSubscriberEvents.groovy
+-rw-r--r--  1 tap staff 1232 Oct 30 15:27 listSubscribers.groovy
+-rw-r--r--  1 tap staff 1520 Oct 30 15:30 listSubscriptionEvents.groovy
+-rw-r--r--  1 tap staff 1232 Oct 30 15:31 listSubscriptions.groovy
+-rw-r--r--  1 tap staff 1781 Oct 30 15:37 listSubscriptionsBySubscriber.groovy
+-rw-r--r--  1 tap staff 3685 Oct 28 21:55 sampleEvent1.json
+-rw-r--r--  1 tap staff  346 Oct 30 17:00 sampleEvent2.json
+tap ~/dev/workspaces/manheim/flexdrive-ca/util on master[+!?]
+$ groovy -Dauth=auth.json listSubscribers.groovy 
+Using fileName auth.json for authorization credentials
+Sending api requests to host => sandbox.api.manheim.com
+Sending token to request url => https://sandbox.api.manheim.com:443/oauth2/token
+Token Response Body => {"tokenType":"bearer","accessToken":"9yjjjep9dukxm45y2s7mfpfc"}
+Token Response Headers => [date:[Fri, 30 Oct 2015 21:06:27 GMT], server:[Apache-Coyote/1.1], content-length:[63], x-content-type-options:[nosniff], correlation_id:[7bd18301-4852-4dcb-9fb4-3bcf3766846e], content-type:[application/json], connection:[keep-alive], x-mashery-responder:[prod-j-worker-us-east-1e-120.mashery.com]]
+Access token => 9yjjjep9dukxm45y2s7mfpfc
+Sending operation to url => https://sandbox.api.manheim.com:443/subscribers/mine
+Subscriber Response Body => {
+  "href" : "https://sandbox.api.manheim.com/subscribers/mine",
+  "items" : [{
+      "auth_id" : "YXV0aDpkdXVibXVhaG15N2hiNGZ0Y2hubW5qY20=",
+      "callback" : "http://ca-flexdrive-qa.cloudhub.io/purchaseEvent",
+      "email" : "Greg.Lawson@rmsautomotive.com",
+      "error_email_frequency" : 24,
+      "error_email_last_sent" : null,
+      "headers" : null,
+      "href" : "https://sandbox.api.manheim.com/subscribers/id/5c90e210-7f23-11e5-be68-7bd1a4d3ed64",
+      "createdOn" : "2015-10-30T16:29:15.825Z",
+      "updatedOn" : "2015-10-30T16:29:15.825Z"
+    }]
+}
+Subscriber Response Headers => [date:[Fri, 30 Oct 2015 21:06:27 GMT], server:[Apache-Coyote/1.1], content-length:[468], x-content-type-options:[nosniff], correlation_id:[feb3cfbd-8bcf-4765-aebf-69e5b986ea8e], content-type:[application/json], connection:[keep-alive], x-mashery-responder:[prod-j-worker-us-east-1d-104.mashery.com]]
+tap ~/dev/workspaces/manheim/flexdrive-ca/util on master[+!?]
+$ groovy -Dauth=auth.json createSubscriber.groovy http://ca-flexdrive-qa.cloudhub.io/purchaseEvent
+Using fileName auth.json for authorization credentials
+Sending api requests to host => sandbox.api.manheim.com
+Sending token to request url => https://sandbox.api.manheim.com:443/oauth2/token
+Token Response Body => {"tokenType":"bearer","accessToken":"4burmqk94p7ftt7rcct7ty6x"}
+Token Response Headers => [date:[Fri, 30 Oct 2015 21:07:01 GMT], server:[Apache-Coyote/1.1], content-length:[63], x-content-type-options:[nosniff], correlation_id:[9882f238-88a9-4d11-b306-98ecaa1bf606], content-type:[application/json], connection:[keep-alive], x-mashery-responder:[prod-j-worker-us-east-1d-101.mashery.com]]
+Access token => 4burmqk94p7ftt7rcct7ty6x
+Sending json...
+{
+  "callback" : "http://ca-flexdrive-qa.cloudhub.io/purchaseEvent"
+}
+Sending operation to url => https://sandbox.api.manheim.com:443/subscribers
+Subscriber Response Body => 
+Subscriber Response Headers => [date:[Fri, 30 Oct 2015 21:07:01 GMT], server:[Apache-Coyote/1.1], content-length:[0], x-content-type-options:[nosniff], correlation_id:[b27c817f-7a3e-41b3-9f1e-923e8d77d8b3], content-type:[application/json], location:[https://sandbox.api.manheim.com/subscribers/id/2a2651d0-7f4a-11e5-a484-6348aed4306c], connection:[keep-alive], x-mashery-responder:[prod-j-worker-us-east-1b-103.mashery.com]]
+Location => [https://sandbox.api.manheim.com/subscribers/id/2a2651d0-7f4a-11e5-a484-6348aed4306c]
+tap ~/dev/workspaces/manheim/flexdrive-ca/util on master[+!?]
+$ groovy -Dauth=auth.json listSubscribers.groovy 
+Using fileName auth.json for authorization credentials
+Sending api requests to host => sandbox.api.manheim.com
+Sending token to request url => https://sandbox.api.manheim.com:443/oauth2/token
+Token Response Body => {"tokenType":"bearer","accessToken":"2jpeqjjwmwjvzn4x8pmnj9pw"}
+Token Response Headers => [date:[Fri, 30 Oct 2015 21:07:13 GMT], server:[Apache-Coyote/1.1], content-length:[63], x-content-type-options:[nosniff], correlation_id:[7aedec93-933a-4538-96d0-4a634caf3fbb], content-type:[application/json], connection:[keep-alive], x-mashery-responder:[prod-j-worker-us-east-1e-124.mashery.com]]
+Access token => 2jpeqjjwmwjvzn4x8pmnj9pw
+Sending operation to url => https://sandbox.api.manheim.com:443/subscribers/mine
+Subscriber Response Body => {
+  "href" : "https://sandbox.api.manheim.com/subscribers/mine",
+  "items" : [{
+      "auth_id" : "YXV0aDpkdXVibXVhaG15N2hiNGZ0Y2hubW5qY20=",
+      "callback" : "http://ca-flexdrive-qa.cloudhub.io/purchaseEvent",
+      "email" : "Greg.Lawson@rmsautomotive.com",
+      "error_email_frequency" : 24,
+      "error_email_last_sent" : null,
+      "headers" : null,
+      "href" : "https://sandbox.api.manheim.com/subscribers/id/5c90e210-7f23-11e5-be68-7bd1a4d3ed64",
+      "createdOn" : "2015-10-30T16:29:15.825Z",
+      "updatedOn" : "2015-10-30T16:29:15.825Z"
+    }, {
+      "auth_id" : "YXV0aDpkdXVibXVhaG15N2hiNGZ0Y2hubW5qY20=",
+      "callback" : "http://ca-flexdrive-qa.cloudhub.io/purchaseEvent",
+      "email" : null,
+      "error_email_frequency" : 24,
+      "error_email_last_sent" : null,
+      "headers" : null,
+      "href" : "https://sandbox.api.manheim.com/subscribers/id/2a2651d0-7f4a-11e5-a484-6348aed4306c",
+      "createdOn" : "2015-10-30T21:07:01.613Z",
+      "updatedOn" : "2015-10-30T21:07:01.613Z"
+    }]
+}
+Subscriber Response Headers => [date:[Fri, 30 Oct 2015 21:07:13 GMT], server:[Apache-Coyote/1.1], content-length:[840], x-content-type-options:[nosniff], correlation_id:[9c5fbb67-2a14-4c6c-8338-4dee5a1e0c39], content-type:[application/json], connection:[keep-alive], x-mashery-responder:[prod-j-worker-us-east-1b-100.mashery.com]]
+tap ~/dev/workspaces/manheim/flexdrive-ca/util on master[+!?]
+$ groovy -Dauth=auth.json -Dsubscription=createSubscription.json createSubscription.groovy https://sandbox.api.manheim.com/subscribers/id/2a2651d0-7f4a-11e5-a484-6348aed4306c
+Using fileName auth.json for authorization credentials
+Sending api requests to host => sandbox.api.manheim.com
+Sending token to request url => https://sandbox.api.manheim.com:443/oauth2/token
+Token Response Body => {"tokenType":"bearer","accessToken":"k32bbnpmkemnrwj845ng5bbu"}
+Token Response Headers => [date:[Fri, 30 Oct 2015 21:08:51 GMT], server:[Apache-Coyote/1.1], content-length:[63], x-content-type-options:[nosniff], correlation_id:[d33f5606-6c05-4b2a-9343-e604009a5c6a], content-type:[application/json], connection:[keep-alive], x-mashery-responder:[prod-j-worker-us-east-1d-110.mashery.com]]
+Access token => k32bbnpmkemnrwj845ng5bbu
+Sending json...
+{
+  "subscriber" : {
+    "href" : "https://sandbox.api.manheim.com/subscribers/id/2a2651d0-7f4a-11e5-a484-6348aed4306c"
+  },
+  "criteria" : [{
+      "type" : {
+        "pattern" : "OFFERINGS.PURCHASED"
+      }
+    }, {
+      "resource" : {
+        "href" : "https://sandbox.api.manheim.com/companies/id/5641754"
+      }
+    }],
+  "expansions" : ["root", "unit.description", "unit.owner", "unit.consignment.orders", "unit.consignment.notes", "unit.consignment.offerings"]
+}
+Sending operation to url => https://sandbox.api.manheim.com:443/subscriptions
+Subscriber Response Body => 
+Subscriber Response Headers => [date:[Fri, 30 Oct 2015 21:08:51 GMT], server:[Apache-Coyote/1.1], content-length:[0], x-content-type-options:[nosniff], correlation_id:[6511b4ef-bd0f-40af-9b4f-d1ac9eee7539], content-type:[application/json], location:[https://sandbox.api.manheim.com/subscriptions/id/618d7c19891435134ff167fc9fb81ccf], connection:[keep-alive], x-mashery-responder:[prod-j-worker-us-east-1b-109.mashery.com]]
+Location => [https://sandbox.api.manheim.com/subscriptions/id/618d7c19891435134ff167fc9fb81ccf]
+tap ~/dev/workspaces/manheim/flexdrive-ca/util on master[+!?]
+$ groovy -Dauth=auth.json listSubscriptions.groovy 
+Using fileName auth.json for authorization credentials
+Sending api requests to host => sandbox.api.manheim.com
+Sending token to request url => https://sandbox.api.manheim.com:443/oauth2/token
+Token Response Body => {"tokenType":"bearer","accessToken":"7jm6v6j7m3jxpthnnvrdadx3"}
+Token Response Headers => [date:[Fri, 30 Oct 2015 21:09:38 GMT], server:[Apache-Coyote/1.1], content-length:[63], x-content-type-options:[nosniff], correlation_id:[363984d8-f0b7-418d-b666-caad2a0754b2], content-type:[application/json], connection:[keep-alive], x-mashery-responder:[prod-j-worker-us-east-1d-119.mashery.com]]
+Access token => 7jm6v6j7m3jxpthnnvrdadx3
+Sending operation to url => https://sandbox.api.manheim.com:443/subscriptions/mine
+Subscriber Response Body => {
+  "href" : "https://sandbox.api.manheim.com/subscriptions/mine",
+  "items" : [{
+      "href" : "https://sandbox.api.manheim.com/subscriptions/id/7a17b74224f1ad5ccc4694de1dbc0079",
+      "subscriber_href" : "https://sandbox.api.manheim.com/subscribers/id/5c90e210-7f23-11e5-be68-7bd1a4d3ed64",
+      "resource" : "OFFERINGS.PURCHASED",
+      "additionalResources" : ["https://sandbox.api.manheim.com/companies/id/5641754"],
+      "expansions" : ["root", "unit.description", "unit.owner", "unit.consignment.orders", "unit.consignment.notes", "unit.consignment.offerings"],
+      "createdOn" : "2015-10-30T18:01:54.679Z",
+      "updatedOn" : "2015-10-30T18:01:54.679Z"
+    }, {
+      "href" : "https://sandbox.api.manheim.com/subscriptions/id/618d7c19891435134ff167fc9fb81ccf",
+      "subscriber_href" : "https://sandbox.api.manheim.com/subscribers/id/2a2651d0-7f4a-11e5-a484-6348aed4306c",
+      "resource" : "OFFERINGS.PURCHASED",
+      "additionalResources" : ["https://sandbox.api.manheim.com/companies/id/5641754"],
+      "expansions" : ["root", "unit.description", "unit.owner", "unit.consignment.orders", "unit.consignment.notes", "unit.consignment.offerings"],
+      "createdOn" : "2015-10-30T21:08:51.967Z",
+      "updatedOn" : "2015-10-30T21:08:51.967Z"
+    }]
+}
+Subscriber Response Headers => [date:[Fri, 30 Oct 2015 21:09:38 GMT], server:[Apache-Coyote/1.1], content-length:[1113], x-content-type-options:[nosniff], correlation_id:[7f40f00e-f165-41a8-b3d3-9c34eb5df110], content-type:[application/json], connection:[keep-alive], x-mashery-responder:[prod-j-worker-us-east-1b-112.mashery.com]]
+tap ~/dev/workspaces/manheim/flexdrive-ca/util on master[+!?]
+$ groovy -Dauth=auth.json createEvent.groovy sampleEvent2.json 
+Using file => sampleEvent2.json
+Using fileName auth.json for authorization credentials
+Sending api requests to host => sandbox.api.manheim.com
+Sending token to request url => https://sandbox.api.manheim.com:443/oauth2/token
+Token Response Body => {"tokenType":"bearer","accessToken":"s3am3wwwecxpvxau6wg8s9rd"}
+Token Response Headers => [date:[Fri, 30 Oct 2015 21:10:39 GMT], server:[Apache-Coyote/1.1], content-length:[63], x-content-type-options:[nosniff], correlation_id:[54e246e2-fd60-46e5-af6a-e52be20eb2a7], content-type:[application/json], connection:[keep-alive], x-mashery-responder:[prod-j-worker-us-east-1b-109.mashery.com]]
+Access token => s3am3wwwecxpvxau6wg8s9rd
+Sending json...
+{
+  "resource" : "https://sandbox.api.manheim.com/companies/id/5641754",
+  "eventType" : "OFFERINGS.PURCHASED",
+  "body" : {
+    "href" : "https://api.manheim.com/offerings/ove/id/abcd",
+    "purchasePrice" : 11200,
+    "status" : "SOLD",
+    "unit" : {
+      "href" : "https://api.manheim.com/units/id/xyz",
+      "vin" : "5FNYF28778D4115AA"
+    }
+  }
+}
+Sending operation to url => https://sandbox.api.manheim.com:443/events
+Subscriber Response Body => 
+Subscriber Response Headers => [date:[Fri, 30 Oct 2015 21:10:39 GMT], server:[Apache-Coyote/1.1], content-length:[0], x-content-type-options:[nosniff], correlation_id:[61f397a7-fc9f-422c-8fb7-4acde1eb924c], content-type:[application/json], location:[https://sandbox.api.manheim.com/events/id/ac04c790-7f4a-11e5-9031-0fcbf64ea8ab], connection:[keep-alive], x-mashery-responder:[prod-j-worker-us-east-1b-112.mashery.com]]
+Location => [https://sandbox.api.manheim.com/events/id/ac04c790-7f4a-11e5-9031-0fcbf64ea8ab]
+tap ~/dev/workspaces/manheim/flexdrive-ca/util on master[+!?]
+$ ls -al
+total 104
+drwxr-xr-x 26 tap staff  884 Oct 30 17:00 ./
+drwxr-xr-x 20 tap staff  680 Oct 30 16:04 ../
+-rw-r--r--  1 tap staff 8196 Oct 30 16:03 .DS_Store
+-rw-r--r--  1 tap staff 3410 Oct 30 12:27 Tools.groovy
+-rw-r--r--  1 tap staff 2530 Oct 28 23:43 addInventoryUnit.groovy
+-rw-r--r--  1 tap staff 2722 Oct 28 23:34 addInventoryUnit.json
+-rw-r--r--  1 tap staff   71 Oct 30 11:37 auth.json
+-rw-r--r--  1 tap staff 1665 Oct 30 14:09 createEvent.groovy
+-rw-r--r--  1 tap staff 1971 Oct 30 13:15 createSubscriber.groovy
+-rw-r--r--  1 tap staff  111 Oct 28 21:25 createSubscriber.json
+-rw-r--r--  1 tap staff 2425 Oct 30 13:49 createSubscription.groovy
+-rw-r--r--  1 tap staff  505 Oct 30 13:45 createSubscription.json
+-rw-r--r--  1 tap staff  507 Oct 22 15:42 createUser.sh
+-rw-r--r--  1 tap staff  206 Oct 27 20:38 curl-requests.txt
+-rw-r--r--  1 tap staff  171 Oct 19 08:52 curlRequest.sh
+-rw-r--r--  1 tap staff 1895 Oct 28 22:25 deleteSubscriber.groovy
+-rw-r--r--  1 tap staff 1893 Oct 28 22:25 deleteSubscriptions.groovy
+-rw-r--r--  1 tap staff 2089 Oct 28 23:04 getSubscription.groovy
+-rw-r--r--  1 tap staff 1590 Oct 30 14:17 listEventsByType.groovy
+-rw-r--r--  1 tap staff 1604 Oct 30 14:11 listSubscriberEvents.groovy
+-rw-r--r--  1 tap staff 1232 Oct 30 15:27 listSubscribers.groovy
+-rw-r--r--  1 tap staff 1520 Oct 30 15:30 listSubscriptionEvents.groovy
+-rw-r--r--  1 tap staff 1232 Oct 30 15:31 listSubscriptions.groovy
+-rw-r--r--  1 tap staff 1781 Oct 30 15:37 listSubscriptionsBySubscriber.groovy
+-rw-r--r--  1 tap staff 3685 Oct 28 21:55 sampleEvent1.json
+-rw-r--r--  1 tap staff  346 Oct 30 17:00 sampleEvent2.json
+tap ~/dev/workspaces/manheim/flexdrive-ca/util on master[+!?]
+$ groovy -Dauth=auth.json listSubscribers.groovy 
+Using fileName auth.json for authorization credentials
+Sending api requests to host => sandbox.api.manheim.com
+Sending token to request url => https://sandbox.api.manheim.com:443/oauth2/token
+Token Response Body => {"tokenType":"bearer","accessToken":"xkng7h4pyh6aq8sqnyfapg2w"}
+Token Response Headers => [date:[Fri, 30 Oct 2015 21:11:52 GMT], server:[Apache-Coyote/1.1], content-length:[63], x-content-type-options:[nosniff], correlation_id:[830d1ca9-dd95-4649-89c0-a4c3bf941885], content-type:[application/json], connection:[keep-alive], x-mashery-responder:[prod-j-worker-us-east-1e-117.mashery.com]]
+Access token => xkng7h4pyh6aq8sqnyfapg2w
+Sending operation to url => https://sandbox.api.manheim.com:443/subscribers/mine
+Subscriber Response Body => {
+  "href" : "https://sandbox.api.manheim.com/subscribers/mine",
+  "items" : [{
+      "auth_id" : "YXV0aDpkdXVibXVhaG15N2hiNGZ0Y2hubW5qY20=",
+      "callback" : "http://ca-flexdrive-qa.cloudhub.io/purchaseEvent",
+      "email" : "Greg.Lawson@rmsautomotive.com",
+      "error_email_frequency" : 24,
+      "error_email_last_sent" : null,
+      "headers" : null,
+      "href" : "https://sandbox.api.manheim.com/subscribers/id/5c90e210-7f23-11e5-be68-7bd1a4d3ed64",
+      "createdOn" : "2015-10-30T16:29:15.825Z",
+      "updatedOn" : "2015-10-30T16:29:15.825Z"
+    }, {
+      "auth_id" : "YXV0aDpkdXVibXVhaG15N2hiNGZ0Y2hubW5qY20=",
+      "callback" : "http://ca-flexdrive-qa.cloudhub.io/purchaseEvent",
+      "email" : null,
+      "error_email_frequency" : 24,
+      "error_email_last_sent" : null,
+      "headers" : null,
+      "href" : "https://sandbox.api.manheim.com/subscribers/id/2a2651d0-7f4a-11e5-a484-6348aed4306c",
+      "createdOn" : "2015-10-30T21:07:01.613Z",
+      "updatedOn" : "2015-10-30T21:07:01.613Z"
+    }]
+}
+Subscriber Response Headers => [date:[Fri, 30 Oct 2015 21:11:52 GMT], server:[Apache-Coyote/1.1], content-length:[840], x-content-type-options:[nosniff], correlation_id:[8c90f4d2-8042-4f24-a187-22c44edbf879], content-type:[application/json], connection:[keep-alive], x-mashery-responder:[prod-j-worker-us-east-1e-102.mashery.com]]
+tap ~/dev/workspaces/manheim/flexdrive-ca/util on master[+!?]
+$ groovy -Dauth=auth.json listSubscriberEvents.groovy 2a2651d0-7f4a-11e5-a484-6348aed4306c
+Using fileName auth.json for authorization credentials
+Sending api requests to host => sandbox.api.manheim.com
+Sending token to request url => https://sandbox.api.manheim.com:443/oauth2/token
+Token Response Body => {"tokenType":"bearer","accessToken":"q36shu7vdtb7gqkcfp5jjjr6"}
+Token Response Headers => [date:[Fri, 30 Oct 2015 21:12:09 GMT], server:[Apache-Coyote/1.1], content-length:[63], x-content-type-options:[nosniff], correlation_id:[850fa63d-1a62-447e-a0db-b9cc3d5162c7], content-type:[application/json], connection:[keep-alive], x-mashery-responder:[prod-j-worker-us-east-1b-103.mashery.com]]
+Access token => q36shu7vdtb7gqkcfp5jjjr6
+Sending operation to url => https://sandbox.api.manheim.com:443/events/subscriber/2a2651d0-7f4a-11e5-a484-6348aed4306c/?startTime=2015-10-26T22:06:42.188Z&endTime=2015-12-30T22:06:42.188Z
+Subscriber Response Headers => [date:[Fri, 30 Oct 2015 21:12:09 GMT], server:[Apache-Coyote/1.1], content-length:[18], x-content-type-options:[nosniff], x-cascade:[pass], correlation_id:[5179952a-6710-4bdc-b8c6-0a2ddce01846], content-type:[application/json], connection:[keep-alive], x-mashery-responder:[prod-j-worker-us-east-1d-101.mashery.com]]
+Subscriber Response Body => <h1>Not Found</h1>
+Caught: org.bson.json.JsonParseException: Invalid JSON input. Position: 1. Character: '<'.
+org.bson.json.JsonParseException: Invalid JSON input. Position: 1. Character: '<'.
+	at org.bson.json.JsonScanner.nextToken(JsonScanner.java:109)
+	at org.bson.json.JsonReader.popToken(JsonReader.java:475)
+	at org.bson.json.JsonReader.readBsonType(JsonReader.java:127)
+	at org.bson.AbstractBsonReader.verifyBSONType(AbstractBsonReader.java:645)
+	at org.bson.AbstractBsonReader.checkPreconditions(AbstractBsonReader.java:687)
+	at org.bson.AbstractBsonReader.readStartDocument(AbstractBsonReader.java:421)
+	at org.bson.codecs.DocumentCodec.decode(DocumentCodec.java:138)
+	at org.bson.codecs.DocumentCodec.decode(DocumentCodec.java:45)
+	at org.bson.Document.parse(Document.java:105)
+	at org.bson.Document.parse(Document.java:90)
+	at org.bson.Document$parse.call(Unknown Source)
+	at listSubscriberEvents.run(listSubscriberEvents.groovy:28)
+tap ~/dev/workspaces/manheim/flexdrive-ca/util on master[+!?]
+$ groovy -Dauth=auth.json listSubscriptionsBySubscriber.groovy 2a2651d0-7f4a-11e5-a484-6348aed4306c
+Using fileName auth.json for authorization credentials
+Sending api requests to host => sandbox.api.manheim.com
+Sending token to request url => https://sandbox.api.manheim.com:443/oauth2/token
+Token Response Body => {"tokenType":"bearer","accessToken":"pg4t3sxrhwmq74w8zhkepw9a"}
+Token Response Headers => [date:[Fri, 30 Oct 2015 21:12:49 GMT], server:[Apache-Coyote/1.1], content-length:[63], x-content-type-options:[nosniff], correlation_id:[d1f122f0-8464-4679-af06-69b066545b29], content-type:[application/json], connection:[keep-alive], x-mashery-responder:[prod-j-worker-us-east-1e-114.mashery.com]]
+Access token => pg4t3sxrhwmq74w8zhkepw9a
+Sending operation to url => https://sandbox.api.manheim.com:443/subscriptions/subscriber/id/2a2651d0-7f4a-11e5-a484-6348aed4306c?includeEvents=true
+Subscriber Response Headers => [date:[Fri, 30 Oct 2015 21:12:49 GMT], server:[Apache-Coyote/1.1], content-length:[18], x-content-type-options:[nosniff], x-cascade:[pass], correlation_id:[1a2ca816-6071-4c4f-bf0c-4547b1803eec], content-type:[application/json], connection:[keep-alive], x-mashery-responder:[prod-j-worker-us-east-1d-116.mashery.com]]
+Subscriber Response Status => 404
+Subscriber Response Status Text => Not Found
+Subscriber Response Body => <h1>Not Found</h1>
+Caught: org.bson.json.JsonParseException: Invalid JSON input. Position: 1. Character: '<'.
+org.bson.json.JsonParseException: Invalid JSON input. Position: 1. Character: '<'.
+	at org.bson.json.JsonScanner.nextToken(JsonScanner.java:109)
+	at org.bson.json.JsonReader.popToken(JsonReader.java:475)
+	at org.bson.json.JsonReader.readBsonType(JsonReader.java:127)
+	at org.bson.AbstractBsonReader.verifyBSONType(AbstractBsonReader.java:645)
+	at org.bson.AbstractBsonReader.checkPreconditions(AbstractBsonReader.java:687)
+	at org.bson.AbstractBsonReader.readStartDocument(AbstractBsonReader.java:421)
+	at org.bson.codecs.DocumentCodec.decode(DocumentCodec.java:138)
+	at org.bson.codecs.DocumentCodec.decode(DocumentCodec.java:45)
+	at org.bson.Document.parse(Document.java:105)
+	at org.bson.Document.parse(Document.java:90)
+	at org.bson.Document$parse.call(Unknown Source)
+	at listSubscriptionsBySubscriber.run(listSubscriptionsBySubscriber.groovy:29)
+tap ~/dev/workspaces/manheim/flexdrive-ca/util on master[+!?]
+$ 

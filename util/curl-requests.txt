@@ -1,0 +1,1 @@
+curl -v -H 'Authorization: Bearer g8pu3paraejty7mh7zkk328m' https://sandbox.api.manheim.com/events/subscriber/kw3ururkz2nknfvb5b9nscn5\?startTime\=2015-10-26T22:06:42.188Z\&endTime\=2015-10-30T22:06:42.188Z
