@@ -1,5 +1,5 @@
 {
-  "resource": "https://api.manheim.com/units/id/xyz",
+  "resource": "https://sandbox.api.manheim.com/companies/id/5641754",
   "eventType": "OFFERINGS.PURCHASED",
   "body":{
     "href": "https://api.manheim.com/units/id/429a5d00-353c-11e4-9c68-129ac19079d6",

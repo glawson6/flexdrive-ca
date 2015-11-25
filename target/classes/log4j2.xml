@@ -3,12 +3,31 @@
         <Console name="Console" target="SYSTEM_OUT">
             <PatternLayout pattern="%-5p %d [%t] %c: %m%n"/>
         </Console>
+        <Gelf name="gelf" host="udp:192.168.1.101" port="12201" version="1.1" extractStackTrace="true"
+              filterStackTrace="true" mdcProfiling="true" includeFullMdc="true" maximumMessageSize="8192"
+              originHost="%host{fqdn}">
+            <Field name="timestamp" pattern="%d{dd MMM yyyy HH:mm:ss,SSS}" />
+            <Field name="level" pattern="%level" />
+            <Field name="simpleClassName" pattern="%C{1}" />
+            <Field name="className" pattern="%C" />
+            <Field name="server" pattern="%host" />
+            <Field name="server.fqdn" pattern="%host{fqdn}" />
+
+            <!-- This is a static field -->
+            <Field name="fieldName2" literal="fieldValue2" />
+
+            <!-- This is a field using MDC -->
+            <Field name="mdcField2" mdc="mdcField2" />
+            <DynamicMdcFields regex="mdc.*" />
+            <DynamicMdcFields regex="(mdc|MDC)fields" />
+        </Gelf>
     </Appenders>
 
     <Loggers>
 
         <AsyncLogger name="org.mongodb.driver.cluster" level="NONE"/>
         <AsyncLogger name="org.mongodb" level="NONE"/>
+        <AsyncLogger name="com.mongodb" level="NONE"/>
         <AsyncLogger name="org.mule.module.http" level="NONE"/>
         <AsyncLogger name="org.glassfish.grizzly" level="NONE"/>
         <Logger name="javax.jmdns.impl.DNSIncoming" level="NONE"/>
@@ -26,11 +45,14 @@
         <!-- Mule classes -->
         <AsyncLogger name="org.mule" level="INFO"/>
         <AsyncLogger name="com.mulesoft" level="INFO"/>
-        <AsyncLogger name="com.ca.flex.component" level="INFO"/>
+        <AsyncLogger name="com.ca.flex.component" level="INFO">
+            <AppenderRef ref="gelf" />
+        </AsyncLogger>
         <AsyncLogger name="org.quartz" level="INFO"/>
 
         <AsyncRoot level="DEBUG">
             <AppenderRef ref="Console"/>
+            <AppenderRef ref="gelf" />
         </AsyncRoot>
     </Loggers>
 

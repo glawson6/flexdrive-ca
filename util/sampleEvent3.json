@@ -1,0 +1,13 @@
+{
+  "resource": "https://sandbox.api.manheim.com/companies/id/5641754",
+  "eventType": "OFFERINGS.PURCHASED",
+  "body": {
+    "href": "https://api.manheim.com/offerings/ove/id/somethingelse",
+    "purchasePrice": 11200,
+    "status": "SOLD",
+    "unit": {
+      "href": "https://api.manheim.com/units/id/xyz",
+      "vin": "5FNYF28778D4115AA"
+    }
+  }
+}

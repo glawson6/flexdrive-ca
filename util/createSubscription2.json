@@ -1,0 +1,20 @@
+{
+  "subscriber": {
+    "href": "https://sandbox.api.manheim.com/subscribers/id/098feb80-7d0a-11e5-abc9-6745720a6e75"
+  },
+  "criteria": [
+    {
+      "type": {
+        "pattern": "OFFERINGS.PURCHASED"
+      }
+    }
+  ],
+  "expansions": [
+    "root",
+    "unit.description",
+    "unit.owner",
+    "unit.consignment.orders",
+    "unit.consignment.notes",
+    "unit.consignment.offerings"
+  ]
+}

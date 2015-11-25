@@ -15,7 +15,7 @@ if (args.length > 0) {
     String authorization = resolveBasicAuth(authFilename);
     String accessToken = getAccessToken(authorization);
 
-    String operationURL = "https://${getAPIHost()}:443/events/subscriber/${args[0]}/?startTime=2015-10-26T22:06:42.188Z&endTime=2015-12-30T22:06:42.188Z";
+    String operationURL = "https://${getAPIHost()}:443/events/subscriber/${args[0]}?startTime=2015-10-26T22:06:42.188Z&endTime=2015-12-30T22:06:42.188Z";
     //String operationURL = "https://${getAPIHost()}:443/events/subscriber/${args[0]}";
     System.out.println("Sending operation to url => ${operationURL}")
     HttpResponse<String> subscriberResponse = Unirest.get(operationURL)
